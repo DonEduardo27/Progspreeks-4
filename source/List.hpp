@@ -1,6 +1,7 @@
 # ifndef BUW_LIST_HPP
 # define BUW_LIST_HPP
 
+# include <iostream>//debug
 # include <cstddef>
 // List . hpp
 template < typename T >
@@ -50,6 +51,10 @@ class List
 public :
 List():
 m_size{0}, m_first {nullptr}, m_last {nullptr}{};
+~List()
+{
+	clear();
+}
 
 bool empty () const 
 {
@@ -74,8 +79,11 @@ void push_front(T const& val)
 	else
 	{
 		ListNode <T>* newNodeFirst = new ListNode<T>{val, nullptr, m_first};
+
+		(*m_first).m_next = newNodeFirst;
 		 m_first = newNodeFirst;
-		(*m_first).m_prev = newNodeFirst;
+
+		
 		
 	}
 	++m_size;
@@ -86,15 +94,16 @@ void push_back(T const & v)
 {	
 	if(empty())
 	{
-		ListNode <T>* newright= new ListNode<T>{v, nullptr, nullptr};
-		m_first = newright;
-		m_last  = newright;
+		ListNode <T>* newNodeLast= new ListNode<T>{v, nullptr, nullptr};
+		m_first = newNodeLast;
+		m_last  = newNodeLast;
 		
 	}else
 	{
-		ListNode <T>* newright= new ListNode<T>{v, m_last , nullptr};
-		 m_last=newright;
-		(*m_first).m_next=newright;
+		ListNode <T>* newNodeLast= new ListNode<T>{v, m_last , nullptr};
+		(*m_first).m_prev=newNodeLast;
+		 m_last=newNodeLast;
+
 	}
 	++m_size;
 }
@@ -103,10 +112,9 @@ void pop_front()
 {
 	if(!empty())
 	{
-		
-		assert(m_first!=nullptr); // makro
+		assert(m_first != nullptr); // makro
 		delete m_first;
-		m_first = (*m_first).m_next;
+		m_first = m_first->m_next;
 
 		--m_size;
 	}
@@ -115,15 +123,22 @@ void pop_back()
 {
 	if(!empty())
 	{
-		
 		assert(m_last!=nullptr); // makro
 		delete m_last;
-		m_first = (*m_first).m_next;
+		m_last = m_last->m_prev;
 		
 		--m_size;
 	}
 }
+void clear()
+{
+	while(m_size > 0)
+	{
+		pop_back();
+		--m_size;
+	}
 
+}
 
 T & front() const
 {
@@ -133,14 +148,6 @@ T & back() const
 {
 	return((*m_last).m_value);
 }
-/*void push_front() 
-{
-
-} 
-push_back() 
-
-front()
-back()*/
 
 
 	typedef T value_type ;
