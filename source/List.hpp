@@ -5,6 +5,7 @@
 // List . hpp
 template < typename T >
 struct List ;
+
 template < typename T >
 struct ListNode
 {
@@ -15,6 +16,7 @@ struct ListNode
 	ListNode * m_prev ;
 	ListNode * m_next ;
 };
+
 template < typename T >
 struct ListIterator
 {
@@ -23,6 +25,7 @@ struct ListIterator
 	private :
 	ListNode <T >* m_node = nullptr ;
 };
+
 template < typename T >
 struct ListConstIterator
 {
@@ -32,10 +35,22 @@ struct ListConstIterator
 	private :
 	ListNode <T >* m_node = nullptr ;
 };
+
+
+
+
 template < typename T >
 class List
 {
+
 public :
+List():
+m_size{0}, m_first {nullptr}, m_last {nullptr}{};
+
+
+
+
+
 	typedef T value_type ;
 	typedef T * pointer ;
 	typedef const T * const_pointer ;
@@ -45,6 +60,18 @@ public :
 	typedef ListConstIterator <T > const_iterator ;
 	friend class ListIterator <T >;
 	friend class ListConstIterator <T >;// not implemented yet
+
+
+bool empty () const 
+{
+	return m_size == 0;
+}
+// http :// en . cppreference . com / w / cpp / container / list / size
+std :: size_t size () const 
+{
+	return m_size;
+}
+
 private :
 	std :: size_t m_size = 0;
 	ListNode <T >* m_first = nullptr ;

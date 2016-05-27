@@ -2,9 +2,12 @@
 #include <catch.hpp>
 #include <math.h>
 #include "List.hpp"
-TEST_CASE("describe_Vec2_Plus","[Vec2]")
+TEST_CASE("1","[one]")
 {
-int i;
+List<int> liste {};
+
+REQUIRE(liste.empty());
+REQUIRE(liste.size() == 0);
 }
 
 int main(int argc, char *argv[])
