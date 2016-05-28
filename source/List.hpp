@@ -14,9 +14,8 @@ struct ListNode
 	m_value(), m_prev(nullptr), m_next(nullptr) {}
 
 	ListNode(T const& v, ListNode *prev, ListNode *next ): 
-	m_value ( v ) , m_prev ( prev ) , m_next ( next )
+	m_value(v), m_prev(prev), m_next (next) {}
 
-	{}
 	T m_value ;
 	ListNode * m_prev ;
 	ListNode * m_next ;
@@ -40,7 +39,7 @@ struct ListIterator
 
 	reference operator* () const 
 	{
-		return *m_node;
+		return m_node->m_value;
 	} 
 	pointer operator ->() const 
 	{
@@ -57,11 +56,11 @@ struct ListIterator
 	}
 	bool operator ==( const Self & x ) const 
 	{
-		return *m_node == x;
+		return this->m_node == x.m_node;
 	} 
 	bool operator !=( const Self & x ) const 
 	{
-		return *m_node != x;
+		return this->m_node != x.m_node;
 	} 
 	Self next () const
 	{
@@ -90,6 +89,15 @@ template < typename T >
 class List
 {
 public :
+	typedef T value_type ;
+	typedef T * pointer ;
+	typedef const T * const_pointer ;
+	typedef T & reference ;
+	typedef const T & const_reference ;
+	typedef ListIterator <T > iterator ;
+	typedef ListConstIterator <T > const_iterator ;
+	friend class ListIterator <T >;
+	friend class ListConstIterator <T >;
 	List(): m_size{0}, m_first {nullptr}, m_last {nullptr}{};
 
 	~List()
@@ -111,18 +119,15 @@ public :
 	{	
 		if(empty())
 		{
-			ListNode <T>* newNodeFirst = new ListNode<T>{val, nullptr, nullptr};
-
-			m_first = newNodeFirst;
-			m_last  = newNodeFirst;
-			
+			m_first = new ListNode<T>{val, nullptr, nullptr};
+			m_last  = m_first;
 		}
 		else
 		{
-			ListNode <T>* newNodeFirst = new ListNode<T>{val, nullptr, m_first};
-
-			(*m_first).m_next = newNodeFirst;
-			 m_first = newNodeFirst;
+			ListNode <T>* newFirst = new ListNode<T>{val, nullptr , m_first};
+			
+			m_first = newFirst ;
+			m_first->m_next->m_prev=m_first;
 		}
 		++m_size;
 	}
@@ -131,22 +136,21 @@ public :
 	{	
 		if(empty())
 		{
-			ListNode <T>* newNodeLast= new ListNode<T>{v, nullptr, nullptr};
-			m_first = newNodeLast;
-			m_last  = newNodeLast;
+			push_front(v);
 		}
 		else
 		{
-			ListNode <T>* newNodeLast= new ListNode<T>{v, m_last , nullptr};
-			(*m_first).m_prev=newNodeLast;
-			 m_last=newNodeLast;
+			ListNode <T>* newLast= new ListNode<T>{v, m_last , nullptr };
+
+			m_last = newLast;
+			m_last->m_prev->m_next=m_last;
 		}
 		++m_size;
 	}
 
 	void pop_front()
 	{
-		if(!empty())
+		if(m_first != nullptr)
 		{
 			assert(m_first != nullptr); // makro
 			delete m_first;
@@ -158,9 +162,9 @@ public :
 
 	void pop_back()
 	{
-		if(!empty())
+		if(m_last != nullptr)
 		{
-			assert(m_last!=nullptr); // makro
+			assert(m_last != nullptr); // makro
 			delete m_last;
 			m_last = m_last->m_prev;
 			
@@ -170,11 +174,10 @@ public :
 
 	void clear()
 	{
-		while(m_size > 0)
+		/*while(m_last != nullptr or m_first != nullptr)
 		{
 			pop_back();
-			--m_size;
-		}
+		}*/
 	}
 
 	T & front() const
@@ -187,23 +190,23 @@ public :
 		return((*m_last).m_value);
 	}
 
+	iterator begin()
+	{
+		iterator itr{m_first};
+		return (itr);
+	}
 
-	typedef T value_type ;
-	typedef T * pointer ;
-	typedef const T * const_pointer ;
-	typedef T & reference ;
-	typedef const T & const_reference ;
-	typedef ListIterator <T > iterator ;
-	typedef ListConstIterator <T > const_iterator ;
-	friend class ListIterator <T >;
-	friend class ListConstIterator <T >;// not implemented yet
-
+	iterator end  ()
+	{
+		iterator itr{m_last};
+		return (itr);
+	}
 
 
 
 private :
 	std :: size_t m_size = 0;
-	ListNode <T >* m_first = nullptr ;
-	ListNode <T >* m_last = nullptr ;
+	ListNode <T>* m_first = nullptr ;
+	ListNode <T>* m_last = nullptr ;
 };
 # endif

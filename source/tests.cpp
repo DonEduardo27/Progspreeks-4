@@ -12,7 +12,7 @@ REQUIRE(liste.size() == 0);
 
 TEST_CASE("2","[two]")
 {
-List<int> liste {};
+List<int> liste ;
 
 liste.push_front (27);
 REQUIRE(liste.front() == 27);
@@ -35,19 +35,40 @@ REQUIRE(liste.back()  == 13);
 liste.push_back(14);
 REQUIRE(liste.back()  == 14);
 REQUIRE(liste.size()  == 9);
-
+//(21,2754,67,45,27,11,12,13,14)
 liste.pop_front();
 liste.pop_back();
-REQUIRE(liste.front()==2754);
-REQUIRE(liste.back()==13);
+
+//(2754,67,45,27,11,12,13)
+
+//REQUIRE(liste.front()==2754);
+//REQUIRE(liste.back()==13);
 
 liste.pop_back();
 REQUIRE(liste.size()==6);
-}
+
+liste.pop_back();
+REQUIRE(liste.size()==5);
+
+liste.pop_back();
+REQUIRE(liste.size()==4);
+
+liste.pop_back();
+REQUIRE(liste.size()==3);
+
+liste.pop_back();
+REQUIRE(liste.size()==2);
+
+liste.pop_back();
+REQUIRE(liste.size()==1);
+
+REQUIRE(liste.front() == liste.back());
+liste.pop_back();
+/*}
 
 TEST_CASE("3","[three]")
 {
-List<int> liste {};
+List<int> liste;
 
 liste.push_front (1);
 liste.push_back  (2);
@@ -58,6 +79,23 @@ liste.clear();
 
 REQUIRE(liste.empty());
 
+}
+
+TEST_CASE("5","[five]")
+{
+List<int> liste;
+auto b = liste.begin ();
+auto e = liste.end ();
+std::cout<<&b<<" "<<&e<<std::endl;
+REQUIRE ( liste.begin () == liste.end () );
+REQUIRE ( b == e );
+}
+
+TEST_CASE ( " provide acces to the first element with begin " , " [ iterators ] " )
+{
+/*List < int > list ;
+list . push_back (42);
+REQUIRE (42 == * list . end ());*/
 }
 
 int main(int argc, char *argv[])
