@@ -55,6 +55,11 @@ struct ListIterator
 		m_node = m_node -> m_next;
 		return *this;
 	}
+	Self operator --( int ) 
+	{
+		m_node = m_node -> m_prev;
+		return *this;
+	}
 	bool operator ==( const Self & x ) const 
 	{
 		return m_node == x.m_node;
@@ -156,6 +161,22 @@ public :
 		}
 		++m_size;
 	}
+	void insert(T const& val, iterator const& pos)
+	{
+		iterator i = begin();
+		while(i!=pos)i++;
+		T temp = *i;
+		*i=val;
+		i++;
+		while(i!=end()) //ekelhaft, hässlich und lineare Laufzeit. Bah.
+		{
+		T temp2 = *i;
+		*i=temp;
+		temp=temp2;
+		i++;
+		}
+		push_back(temp);
+	}
 
 	void pop_front()
 	{
@@ -188,6 +209,15 @@ public :
 			pop_back();
 		}
 	}
+	void reverse()
+	{
+		List<T> rev{*this};
+		clear();
+		for(iterator i = rev.begin(); i!=rev.end(); i++)
+		{
+			push_front(*i);
+		}
+	}
 
 	T & front() const
 	{
@@ -209,16 +239,19 @@ public :
 	{
 		if(empty())
 		{
-			return nullptr; 		//fals leer								
-		}else if (m_last->m_next == nullptr) // nach dem letzten element? !SOLLTE MAN DAS nicht schon im pushback habe...
+			return nullptr; 									
+		}
+		else if (m_last->m_next == nullptr) 
 		{ 		
-					ListNode<T>* node = new ListNode<T> (); 	//leeres node
-					node->m_prev = m_last; 							
-					m_last->m_next = node; 					
-					return node;
-				} else { //letztes element exist bereits!
-					return m_last->m_next;										
-				}
+			ListNode<T>* node = new ListNode<T> ();
+			node->m_prev = m_last; 							
+			m_last->m_next = node; 					
+			return node;
+		} 
+		else 
+		{
+			return m_last->m_next;										
+		}
 			
 	}
 
