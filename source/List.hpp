@@ -43,24 +43,25 @@ struct ListIterator
 	} 
 	pointer operator ->() const 
 	{
-		return m_node;
+		return *m_node;
 	} 
 	Self & operator ++() 
 	{
-		return m_node.next();
+		m_node = m_node -> m_next;
+		return *this;
 	} 
-
 	Self operator ++( int ) 
 	{
-		return *m_node + 1;
+		m_node = m_node -> m_next;
+		return *this;
 	}
 	bool operator ==( const Self & x ) const 
 	{
-		return this->m_node == x.m_node;
+		return m_node == x.m_node;
 	} 
 	bool operator !=( const Self & x ) const 
 	{
-		return this->m_node != x.m_node;
+		return m_node != x.m_node;
 	} 
 	Self next () const
 	{
@@ -99,7 +100,14 @@ public :
 	friend class ListIterator <T >;
 	friend class ListConstIterator <T >;
 	List(): m_size{0}, m_first {nullptr}, m_last {nullptr}{};
-
+	//erste idee: List(): m_size{origin.size()}, m_first {origin.m_first}, m_last {origin.m_last}{}; <- wäre aber keine kope sondern verknüpfung
+	List(List<T> const& origin): m_size{0},m_first {nullptr}, m_last {nullptr}
+	{
+		for(auto i = origin.begin(); i!= origin.end() ; i++)
+		{
+			push_back(*i);
+		}
+	}
 	~List()
 	{
 		clear();
@@ -132,15 +140,16 @@ public :
 		++m_size;
 	}
 
-	void push_back(T const & v)
+	void push_back(T const & val)
 	{	
 		if(empty())
 		{
-			push_front(v);
+			m_first = new ListNode<T>{val, nullptr, nullptr};
+			m_last  = m_first;
 		}
 		else
 		{
-			ListNode <T>* newLast= new ListNode<T>{v, m_last , nullptr };
+			ListNode <T>* newLast= new ListNode<T>{val, m_last , nullptr };
 
 			m_last = newLast;
 			m_last->m_prev->m_next=m_last;
@@ -174,10 +183,10 @@ public :
 
 	void clear()
 	{
-		/*while(m_last != nullptr or m_first != nullptr)
+		while(!empty())
 		{
 			pop_back();
-		}*/
+		}
 	}
 
 	T & front() const
@@ -190,17 +199,18 @@ public :
 		return((*m_last).m_value);
 	}
 
-	iterator begin()
+	iterator begin() const
 	{
 		iterator itr{m_first};
 		return (itr);
 	}
 
-	iterator end  ()
+	iterator end  () const
 	{
 		iterator itr{m_last};
 		return (itr);
 	}
+
 
 
 
@@ -209,4 +219,29 @@ private :
 	ListNode <T>* m_first = nullptr ;
 	ListNode <T>* m_last = nullptr ;
 };
+
+template < typename T >
+	bool operator ==( List <T> const & xs , List <T > const & ys )
+	{
+		if(xs.size() != ys.size()){return false;}
+		else
+		{
+			ListIterator<T> x = xs.begin();
+			ListIterator<T> y = ys.begin();
+			while(x!= xs.end() and y!= ys.end())
+			{
+				if(*x != *y){return false;}
+				
+				x++;
+				y++;
+			}
+		}
+		return true;
+	}
+
+	template < typename T >
+	bool operator !=( List <T > const & xs , List <T > const & ys )
+	{
+		return !(xs==ys);	
+	}
 # endif
