@@ -207,8 +207,19 @@ public :
 
 	iterator end  () const
 	{
-		iterator itr{m_last};
-		return (itr);
+		if(empty())
+		{
+			return nullptr; 		//fals leer								
+		}else if (m_last->m_next == nullptr) // nach dem letzten element? !SOLLTE MAN DAS nicht schon im pushback habe...
+		{ 		
+					ListNode<T>* node = new ListNode<T> (); 	//leeres node
+					node->m_prev = m_last; 							
+					m_last->m_next = node; 					
+					return node;
+				} else { //letztes element exist bereits!
+					return m_last->m_next;										
+				}
+			
 	}
 
 
