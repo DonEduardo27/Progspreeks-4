@@ -43,17 +43,20 @@ struct ListIterator
 	} 
 	pointer operator ->() const 
 	{
-		return *m_node;
+		return &(m_node->m_value);
 	} 
-	Self & operator ++() 
+	Self & operator ++() //++i
 	{
 		m_node = m_node -> m_next;
 		return *this;
 	} 
-	Self operator ++( int ) 
+	Self operator ++( int ) //i++
 	{
+		ListIterator tmp(*this);
+
 		m_node = m_node -> m_next;
-		return *this;
+		
+		return tmp;
 	}
 	Self operator --( int ) 
 	{
@@ -139,8 +142,9 @@ public :
 		{
 			ListNode <T>* newFirst = new ListNode<T>{val, nullptr , m_first};
 			
-			m_first = newFirst ;
-			m_first->m_next->m_prev=m_first;
+			m_first = newFirst;
+
+			m_first->m_next->m_prev = m_first;
 		}
 		++m_size;
 	}
@@ -219,12 +223,22 @@ public :
 		}
 	}
 
-	T & front() const
+	T const& front() const
 	{
 		return((*m_first).m_value);
 	}
 
-	T & back() const
+	T const& back() const
+	{
+		return((*m_last).m_value);
+	}
+
+	T & front()
+	{
+		return((*m_first).m_value);
+	}
+
+	T & back()
 	{
 		return((*m_last).m_value);
 	}
