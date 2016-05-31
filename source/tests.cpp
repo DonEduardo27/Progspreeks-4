@@ -2,6 +2,10 @@
 #include <catch.hpp>
 #include <math.h>
 #include "List.hpp"
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <iterator>
 
 template < typename T >
 List<T> reverse(List<T> const& l) 
@@ -155,42 +159,42 @@ REQUIRE (liste3!=liste1);
 
 TEST_CASE ( "7" , " [ constructor ] " )
 {
-List < int > list ;
-list . push_front (1);
-list . push_front (2);
-list . push_front (3);
-list . push_front (4);
-List < int > list2 { list };
+List < int > liste ;
+liste.push_front(1);
+liste.push_front(2);
+liste.push_front(3);
+liste.push_front(4);
+List<int>liste2{liste};
 
-REQUIRE ( list == list2 );
+REQUIRE ( liste == liste2 );
 }
 
 TEST_CASE ( "8" , " [insert] " )
 {
-List <int>list;
-list.push_front(1);
-list.push_front(2);
-list.push_front(3);
-list.push_front(4);
-list.push_front(5);
-list.push_front(6);
-list.push_front(7);
-list.push_front(8);
-ListIterator<int> i = list.begin();
+List <int>liste;
+liste.push_front(1);
+liste.push_front(2);
+liste.push_front(3);
+liste.push_front(4);
+liste.push_front(5);
+liste.push_front(6);
+liste.push_front(7);
+liste.push_front(8);
+ListIterator<int> i = liste.begin();
 i++;
 i++;
-list.insert(400 , i);
+liste.insert(400 , i);
 
 
 
-REQUIRE ( list.size() == 9);
-REQUIRE (*list.begin()== 8);
-ListIterator<int> a = list.begin();
+REQUIRE ( liste.size() == 9);
+REQUIRE (*liste.begin()== 8);
+ListIterator<int> a = liste.begin();
 a++;
 REQUIRE ( *a == 7);
 a++;
 REQUIRE ( *a == 400 );
-a=list.end();
+a=liste.end();
 a--;
 REQUIRE ( *a == 1);
 }
@@ -269,6 +273,39 @@ b++;
 }
 
 }
+
+TEST_CASE ( " optional " , " [ zehn ] " )
+{
+/*List <int>list;
+list.push_back (27);
+list.push_back (28);
+list.push_front (29);
+list.push_back (24);
+list.push_back (23);
+list.push_front (22);*/
+//22 29 27 28 24 23
+std::vector<int> v0;
+
+List <int> l0;
+
+l0.push_back (27);
+
+std::copy(l0.begin(),l0.end(),v0.begin());
+
+/*ListIterator<int> a = l0.begin();
+
+while(a != l0.end())
+{
+if(a!=nullptr)std::cout<<*a<<" ";
+a++;
+
+}*/
+}
+
+
+
+
+
 
 int main(int argc, char *argv[])
 {

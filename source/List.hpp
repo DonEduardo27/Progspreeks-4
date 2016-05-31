@@ -3,6 +3,7 @@
 
 # include <iostream>//debug
 # include <cstddef>
+#include <algorithm>
 // List . hpp
 template < typename T >
 struct List ;
@@ -103,11 +104,18 @@ public :
 	typedef const T * const_pointer ;
 	typedef T & reference ;
 	typedef const T & const_reference ;
-	typedef ListIterator <T > iterator ;
+	typedef ListIterator <T> iterator ;
 	typedef ListConstIterator <T > const_iterator ;
 	friend class ListIterator <T >;
 	friend class ListConstIterator <T >;
 	List(): m_size{0}, m_first {nullptr}, m_last {nullptr}{};
+	List(std::size_t _size): m_size{_size}, m_first {nullptr}, m_last {nullptr}
+	{
+		for(std::size_t i = 0; i < _size; i++)
+		{
+			push_back(0);
+		}
+	}
 	//erste idee: List(): m_size{origin.size()}, m_first {origin.m_first}, m_last {origin.m_last}{}; <- wäre aber keine kope sondern verknüpfung
 	List(List<T> const& origin): m_size{0},m_first {nullptr}, m_last {nullptr}
 	{
