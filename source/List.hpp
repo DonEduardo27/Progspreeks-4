@@ -3,7 +3,8 @@
 
 # include <iostream>//debug
 # include <cstddef>
-#include <algorithm>
+# include <algorithm>
+# include <utility>
 // List . hpp
 template < typename T >
 struct List ;
@@ -124,10 +125,41 @@ public :
 			push_back(*i);
 		}
 	}
+	
+	List (List&& mvlst ): 
+	m_first {mvlst.m_first}, m_last {mvlst.m_last}, m_size{mvlst.m_size} 
+	{
+		mvlst.m_first = nullptr ;
+		mvlst.m_last = nullptr ;
+		mvlst.m_size = 0;
+	}
+
 	~List()
 	{
 		clear();
 	}
+	
+
+
+
+
+	List& operator=(List& l)
+	{  
+		swap (l); // swap memberwise 
+		return * this;
+	}
+
+	void swap (List & l ) 
+	{// use std ::swap for builtins 
+		std::swap(m_first,l.m_first);
+		std::swap(m_last,l.m_last);
+		std::swap(m_size,l.m_size);
+	}
+
+
+
+
+
 
 	bool empty () const 
 	{

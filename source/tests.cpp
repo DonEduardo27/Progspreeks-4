@@ -276,14 +276,7 @@ b++;
 
 TEST_CASE ( " optional " , " [ zehn ] " )
 {
-/*List <int>list;
-list.push_back (27);
-list.push_back (28);
-list.push_front (29);
-list.push_back (24);
-list.push_back (23);
-list.push_front (22);*/
-//22 29 27 28 24 23
+/*
 std::vector<int> v0;
 
 List <int> l0;
@@ -291,19 +284,62 @@ List <int> l0;
 l0.push_back (27);
 
 std::copy(l0.begin(),l0.end(),v0.begin());
+*/
 
-/*ListIterator<int> a = l0.begin();
-
-while(a != l0.end())
-{
-if(a!=nullptr)std::cout<<*a<<" ";
-a++;
-
-}*/
 }
 
+TEST_CASE ( " zueweisung " , " [ elf ] " )
+{
+List <int>list;
+list.push_back(1);
+list.push_back(2);
+list.push_back(3);
+list.push_back(4);
+list.push_back(5);
+list.push_back(6);
+list.push_back(7);
+list.push_back(8);
+list.push_back(9);
+list.push_back(10);
+list.push_back(11);
+list.push_back(12);
+list.push_back(13);
+list.push_back(14);
+list.push_back(15);
+list.push_back(16);
 
+List<int> listnew;
+listnew=list;
 
+REQUIRE(list.size() == 0);
+REQUIRE(listnew.size() == 16);
+ListIterator<int> a = listnew.begin();
+
+for(int i=1; i<16; i++)
+{
+REQUIRE ( *a == i);
+a++;
+}	
+
+}
+
+TEST_CASE ( " last but not Last " , " [ zwölf ] " )
+{
+List<int>list;
+list.push_front(1);
+list.push_front(2);
+list.push_front(3);
+list.push_front(4);
+
+REQUIRE(0!=list.size());
+REQUIRE(!list.empty());
+
+List<int>list2(std::move(list));
+
+REQUIRE(0==list.size());
+REQUIRE(list.empty());
+REQUIRE(4==list2.size());
+}
 
 
 
