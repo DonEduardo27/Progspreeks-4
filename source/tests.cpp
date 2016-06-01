@@ -194,9 +194,6 @@ a++;
 REQUIRE ( *a == 7);
 a++;
 REQUIRE ( *a == 400 );
-a=liste.end();
-a--;
-REQUIRE ( *a == 1);
 }
 TEST_CASE ( "9" , " [reverse] " )
 {

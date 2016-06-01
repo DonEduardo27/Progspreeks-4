@@ -39,6 +39,7 @@ struct ListIterator
 	ListIterator():  m_node{nullptr} {} 
 	ListIterator( ListNode <T> *n ): m_node{n} {} 
 
+
 	reference operator* () const 
 	{
 		return m_node->m_value;
@@ -49,25 +50,21 @@ struct ListIterator
 	} 
 	Self & operator ++() //++i
 	{
-		m_node = m_node -> m_next;
+		if (m_node)
+		  {m_node = m_node -> m_next;}
 		return *this;
 	} 
 	Self operator ++( int ) //i++
 	{
 		ListIterator tmp(*this);
 
-		m_node = m_node -> m_next;
+		if (m_node) m_node = m_node -> m_next;
 		
 		return tmp;
 	}
-	Self operator --( int ) 
-	{
-		m_node = m_node -> m_prev;
-		return *this;
-	}
 	bool operator ==( const Self & x ) const 
 	{
-		return m_node == x.m_node;
+		return (m_node == x.m_node);
 	} 
 	bool operator !=( const Self & x ) const 
 	{
@@ -92,7 +89,6 @@ struct ListConstIterator
 	private :
 	ListNode <T >* m_node = nullptr ;
 };
-
 
 
 
@@ -138,10 +134,6 @@ public :
 	{
 		clear();
 	}
-	
-
-
-
 
 	List& operator=(List& l)
 	{  
@@ -155,12 +147,6 @@ public :
 		std::swap(m_last,l.m_last);
 		std::swap(m_size,l.m_size);
 	}
-
-
-
-
-
-
 	bool empty () const 
 	{
 		return m_size == 0;
@@ -205,19 +191,25 @@ public :
 		}
 		++m_size;
 	}
+
 	void insert(T const& val, iterator const& pos)
 	{
+		/*ListNode<T> newNode = new ListNode(val , pos->m_prev , pos.m_node);
+
+		pos->m_prev->m_next = newNode;
+		pos.m_node = newNode;*/
 		iterator i = begin();
 		while(i!=pos)i++;
+
 		T temp = *i;
 		*i=val;
 		i++;
 		while(i!=end()) //ekelhaft, hässlich und lineare Laufzeit. Bah.
 		{
-		T temp2 = *i;
-		*i=temp;
-		temp=temp2;
-		i++;
+			T temp2 = *i;
+			*i=temp;
+			temp=temp2;
+			i++;
 		}
 		push_back(temp);
 	}
@@ -286,31 +278,13 @@ public :
 	iterator begin() const
 	{
 		iterator itr{m_first};
-		return (itr);
+		return m_first;
 	}
 
 	iterator end  () const
 	{
-		if(empty())
-		{
-			return nullptr; 									
-		}
-		else if (m_last->m_next == nullptr) 
-		{ 		
-			ListNode<T>* node = new ListNode<T> ();
-			node->m_prev = m_last; 							
-			m_last->m_next = node; 					
-			return node;
-		} 
-		else 
-		{
-			return m_last->m_next;										
-		}
-			
+		return ListIterator<T>{};
 	}
-
-
-
 
 private :
 	std :: size_t m_size = 0;
@@ -337,9 +311,9 @@ template < typename T >
 		return true;
 	}
 
-	template < typename T >
-	bool operator !=( List <T > const & xs , List <T > const & ys )
+	template <typename T>
+	bool operator !=( List <T> const & xs , List <T> const & ys )
 	{
-		return !(xs==ys);	
+		return ! (xs==ys);	
 	}
 # endif
