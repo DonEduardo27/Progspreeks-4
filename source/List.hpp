@@ -70,11 +70,21 @@ struct ListIterator
 	{
 		return m_node != x.m_node;
 	} 
-	Self next () const
+	Self next() const
 	{
 		if (m_node) return ListIterator (m_node -> m_next);
 		else        return ListIterator (nullptr);
 	}
+
+	Self prev() const
+	{
+		if (m_node) return ListIterator (m_node->m_prev);
+		else        return ListIterator (nullptr);
+	}
+
+
+
+
 
 private :
 	ListNode <T> *m_node = nullptr ;
@@ -192,26 +202,25 @@ public :
 		++m_size;
 	}
 
-	void insert(T const& val, iterator const& pos)
+	void insert(T const& val, iterator& pos)
 	{
-		/*ListNode<T> newNode = new ListNode(val , pos->m_prev , pos.m_node);
 
-		pos->m_prev->m_next = newNode;
-		pos.m_node = newNode;*/
-		iterator i = begin();
-		while(i!=pos)i++;
-
-		T temp = *i;
-		*i=val;
-		i++;
-		while(i!=end()) //ekelhaft, hässlich und lineare Laufzeit. Bah.
+		if (pos==begin())
 		{
-			T temp2 = *i;
-			*i=temp;
-			temp=temp2;
-			i++;
+			push_front(val);
 		}
-		push_back(temp);
+		else if(pos==end())
+		{
+			push_back(val);
+		}
+		else 
+		{
+			ListNode <T>* newnode= new ListNode<T>{val, pos.prev().m_node, pos.m_node};
+
+			pos.prev().m_node->m_next = newnode;
+			pos.m_node->m_prev = newnode;
+			m_size++;
+		}
 	}
 
 	void pop_front()
