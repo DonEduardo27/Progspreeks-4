@@ -273,15 +273,20 @@ b++;
 
 TEST_CASE ( " optional " , " [ zehn ] " )
 {
-/*
-std::vector<int> v0;
 
-List <int> l0;
+List<int> list; 
+for(unsigned int i = 0; i < 20 ; i++)
+{
+	list.push_back(i*2); 
+}
 
-l0.push_back (27);
+   std::vector<int> v0 (list.size());
+   std::copy(list.begin(), list.end(), std::begin(v0));
 
-std::copy(l0.begin(),l0.end(),v0.begin());
-*/
+for(unsigned int i = 0; i < 40 ; i+=2)
+{
+   REQUIRE(i == v0[i/2]);
+}
 
 }
 
